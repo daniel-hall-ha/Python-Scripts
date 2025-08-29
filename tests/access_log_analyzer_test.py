@@ -24,7 +24,10 @@ class UnitTests(unittest.TestCase):
         result = status_code_destribution([{},{}])
         self.assertEqual(result, "")
 
-    def test_error_percentage():
-        pass
+    def test_error_percentage(self):
+        result = error_percentage([{}])
+        self.assertEqual(result, "")
 
-    def test_hourly_traffics(all_data_dict_list):
+    def test_hourly_traffics(self):
+        result = hourly_traffics([{}])
+        self.assertEqual(result, "")
