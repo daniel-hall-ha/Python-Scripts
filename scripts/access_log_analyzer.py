@@ -3,7 +3,19 @@
 import os, sys, re
 
 def input_file():
-    pass
+    # Log File Input Control
+    file_type = input("Choose log type.\n1. Apache Access Combine\n2. Apache Access Common\n3. Loggly Events JSON\n4. NGINX Access or Enter q to quit.")
+    if file_type in ["Q", "q"]:
+        sys.exit(1)
+    while file_type not in ["1", "2", "3", "4"]:
+        file_type = input("Invalid Choice! Enter again or q to quit:")
+    #Log Path Input Control
+    file_path = input("Enter your file path. Enter q to quit: ")
+    if file_path in ["Q", "q"]:
+        sys.exit(1)
+    while (not os.path.exists(file_path)):
+        file_path = input("File not found! Check again and re-enter. Enter q to quit: ")
+    return file_type, file_path
 
 def extract_data_from_file(file_type, file_path):
     pass
@@ -23,17 +35,13 @@ def error_percentage(status_dict_list):
 def hourly_traffics(all_data_dict_list):
     pass
 
-# Print Header
-print("Server Log Analysis Report")
-print("==============================")
+def main():
+    # Print Header
+    print("Server Log Analysis Report")
+    print("==============================")
 
-file_status, file_type, file_path = input_file()
+    file_type, file_path = input_file()
 
-# Check if file is found, else exit
-if file_status is not "OK":
-    print("File not found!")
-    sys.exit(1)
-else:
     # Fetch data from file and save as dictionary
     all_data_dict_list = extract_data_from_file(file_type, file_path)
 
@@ -60,6 +68,9 @@ else:
     # Evaluate and print Peak Traffic Hour
     traffics = hourly_traffics(all_data_dict_list)
     print(f"Peak traffic hour: {traffics[0]["Hour"]}:00 - {traffics[0]["Hour"]+1 if traffics[0]["Hour"] < 24 else 00}:00 UTC")
+
+if __name__ == "__main__":
+    main()
 
 '''
 #Sample Output

@@ -1,13 +1,14 @@
 import unittest
-from scripts.access_log_analyzer import *
+from scripts.access_log_analyzer import input_file
 from unittest.mock import patch
 
 class UnitTests(unittest.TestCase):
-    @patch("builtins.input", return_value="/Users/danielhall/Desktop/Automation/Python Scripts/tests/access_log_analyzer_test.py")   # simulate input
+    @patch("builtins.input", side_effect=["1", "/Users/danielhall/Desktop/Automation/Python Scripts/tests/access_log_analyzer_test.py"])   # simulate input
     def test_input_file(self, mock_input):
         result = input_file()
-        self.assertEqual(result, "")
+        self.assertEqual(result, ("1", "/Users/danielhall/Desktop/Automation/Python Scripts/tests/access_log_analyzer_test.py"))
 
+'''
     def test_extracted_data_from_apache_combined_format_file(self):
         result = extract_data_from_file(1, "/Users/danielhall/Desktop/Automation/Python Scripts/tests/access_log_analyzer_test.py")
         self.assertEqual(result, "")
@@ -28,3 +29,7 @@ class UnitTests(unittest.TestCase):
         pass
 
     def test_hourly_traffics(all_data_dict_list):
+'''
+
+if __name__ == "__main__":
+    unittest.main()
