@@ -431,7 +431,7 @@ class UnitTests(unittest.TestCase):
                 "user_agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) Firefox/113.0"
         }]
         result = status_code_destribution(data_list)
-        expected1 = [{"status": 404, "frequency":2}, {"status": 500, "frequency": 1}, {"status": 503, "frequency": 1}, {"status": 502, "frequency": 1}]
+        expected1 = [{"status": 404, "frequency":2}, {"status": 500, "frequency": 1}, {"status": 502, "frequency": 1}, {"status": 503, "frequency": 1}]
         expected2 = [{"2xx Success": 0}, {"3xx Redirect": 0}, {"4xx Client Error": 2}, {"5xx Server Error": 3}]
         self.assertEqual(result, (expected1,expected2))
 
@@ -497,7 +497,7 @@ class UnitTests(unittest.TestCase):
                 "user_agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) Firefox/113.0"
         }]
         result = hourly_traffics(data_list)
-        self.assertEqual(result, [{"hour": "00:00 - 01:00 UTC", "traffic":4}, {"hour": "01:00 - 02:00 UTC", "traffic":1}])
+        self.assertEqual(result, [{"hour": "00:00 - 01:00 UTC", "requests":4}, {"hour": "01:00 - 02:00 UTC", "requests":1}])
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
