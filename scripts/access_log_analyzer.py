@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import os, sys, re
+import os, sys, re, json
 
 def input_file():
     # Log File Input Control
@@ -18,7 +18,45 @@ def input_file():
     return file_type, file_path
 
 def extract_data_from_file(file_type, file_path):
-    pass
+    data = []
+    with open(file_path, 'r') as file:
+        if file_type in ["1", "4"]:
+            for line in file:
+                if line.strip():
+                    pattern = r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) [- ]+ \[(\d{2}/\w{3}/\d{4}):(\d{2}:\d{2}:\d{2}) ?\] "(PUT|PUSH|POST|DELETE|GET) (\S+) ((?:HTTP|HTTPS)/\d+\.\d+)" (\d{3}) (\d+) "(.+)" "(.+)"'
+                    result = re.match(pattern, line.strip())
+                    ip = result.group(1)
+                    date = result.group(2)
+                    time = result.group(3)
+                    method = result.group(4)
+                    path = result.group(5)
+                    protocol_version = result.group(6)
+                    status = int(result.group(7))
+                    size = int(result.group(8))
+                    referer = result.group(9)
+                    user_agent = result.group(10)
+                    data.append({"ip":ip, "timestamp":date + ":" + time, "method":method, "path":path, "protocol":protocol_version, "status":status, "size":size, "referer":referer, "user_agent": user_agent})
+            return data
+        elif file_type == "2":
+            for line in file:
+                if line.strip():
+                    pattern = r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) [- ]+ \[(\d{2}/\w{3}/\d{4}):(\d{2}:\d{2}:\d{2}) ?\] "(PUT|PUSH|POST|DELETE|GET) (\S+) ((?:HTTP|HTTPS)/\d+\.\d+)" (\d{3}) (\d+)'
+                    result = re.match(pattern, line.strip())
+                    ip = result.group(1)
+                    date = result.group(2)
+                    time = result.group(3)
+                    method = result.group(4)
+                    path = result.group(5)
+                    protocol_version = result.group(6)
+                    status = int(result.group(7))
+                    size = int(result.group(8))
+                    data.append({"ip":ip, "timestamp":date + ":" + time, "method":method, "path":path, "protocol":protocol_version, "status":status, "size":size})
+            return data
+        else:
+            for line in file:
+                if line.strip():
+                    data.append(json.loads(line.strip()))
+            return data
 
 def total_number_of_requests(all_data_dict_list):
     pass
