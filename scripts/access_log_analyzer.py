@@ -59,10 +59,18 @@ def extract_data_from_file(file_type, file_path):
             return data
 
 def total_number_of_requests(all_data_dict_list):
-    pass
+    return len(all_data_dict_list)
 
 def IP_frequencies(all_data_dict_list):
-    pass
+    IP_frequencies_list = []
+    for data in all_data_dict_list:
+        updated_ip_list = list(ip["ip"] for ip in IP_frequencies_list)
+        if not data["ip"] in updated_ip_list:
+            IP_frequencies_list.append({"ip": data["ip"], "requests": 1})
+        else:
+            IP_index = IP_frequencies_list.index(next(ip for ip in IP_frequencies_list if ip["ip"] == data["ip"]))
+            IP_frequencies_list[IP_index]["requests"] += 1
+    return IP_frequencies_list
 
 def status_code_destribution(all_data_dict_list):
     pass
