@@ -9,7 +9,7 @@ class UnitTests(unittest.TestCase):
         self.assertEqual(result, ("1", "/Users/danielhall/Desktop/Automation/Python Scripts/tests/access_log_analyzer_test.py"))
 
     def test_extracted_data_from_apache_combined_format_file(self):
-        result = extract_data_from_file(1, "/Users/danielhall/Desktop/Automation/Python Scripts/tests/access_log_analyzer_test.py")
+        result = extract_data_from_file("1", "/Users/danielhall/Desktop/Automation/Python Scripts/tests/access_log_analyzer_test.py")
         extracted_dict_list = [
             {
                 "ip": "161.90.170.15",
@@ -70,7 +70,7 @@ class UnitTests(unittest.TestCase):
         self.assertEqual(result, extracted_dict_list)
     
     def test_extracted_data_from_apache_common_format_file(self):
-        result = extract_data_from_file(1, "/Users/danielhall/Desktop/Automation/Python Scripts/tests/access_log_analyzer_test.py")
+        result = extract_data_from_file("2", "/Users/danielhall/Desktop/Automation/Python Scripts/tests/access_log_analyzer_test.py")
         extracted_dict_list = [
             {
                 "ip": "219.74.230.75",
@@ -121,7 +121,7 @@ class UnitTests(unittest.TestCase):
         self.assertEqual(result, extracted_dict_list)
     
     def test_extracted_data_from_loggly_json_format_file(self):
-        result = extract_data_from_file(1, "/Users/danielhall/Desktop/Automation/Python Scripts/tests/access_log_analyzer_test.py")
+        result = extract_data_from_file("3", "/Users/danielhall/Desktop/Automation/Python Scripts/tests/access_log_analyzer_test.py")
         extracted_dict_list = [
             {
                 "timestamp": "2025-08-29T00:37:02.242229",
@@ -192,7 +192,7 @@ class UnitTests(unittest.TestCase):
         self.assertEqual(result, extracted_dict_list)
     
     def test_extracted_data_from_apache_combined_format_file(self):
-        result = extract_data_from_file(1, "/Users/danielhall/Desktop/Automation/Python Scripts/tests/access_log_analyzer_test.py")
+        result = extract_data_from_file("4", "/Users/danielhall/Desktop/Automation/Python Scripts/tests/access_log_analyzer_test.py")
         extracted_data_list = [
             {
                 "ip": "127.167.171.1",
