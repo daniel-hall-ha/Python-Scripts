@@ -70,7 +70,7 @@ def IP_frequencies(all_data_dict_list):
         else:
             IP_index = IP_frequencies_list.index(next(ip for ip in IP_frequencies_list if ip["ip"] == data["ip"]))
             IP_frequencies_list[IP_index]["requests"] += 1
-    return IP_frequencies_list
+    return sorted(IP_frequencies_list, key = lambda x: x["requests"], reverse=True)
 
 def status_code_destribution(all_data_dict_list):
     status_code_destribution_list = []
@@ -94,14 +94,14 @@ def status_code_destribution(all_data_dict_list):
         elif str(status["status"]).startswith("5"):
             brief_status_list[3]["5xx Server Error"] += status["frequency"]
     ###
-    return status_code_destribution_list, brief_status_list
+    return sorted(status_code_destribution_list, key=lambda x: x["status"]), brief_status_list
 
 def error_percentage(brief_status_list):
     error_count = 0
     total_status = sum(list(frequency.values())[0] for frequency in brief_status_list)
     for status in brief_status_list[2:]:
         error_count += list(status.values())[0]
-    return f"{(error_count/total_status)*100:1}%"
+    return f"{(error_count/total_status)*100:2f}%"
 
 def hourly_traffics(all_data_dict_list):
     traffics_list = []
@@ -113,11 +113,11 @@ def hourly_traffics(all_data_dict_list):
         ###
         updated_hour_list = list(hour["hour"] for hour in traffics_list)
         if not hour_value in updated_hour_list:
-            traffics_list.append({"hour": hour_value, "traffic": 1})
+            traffics_list.append({"hour": hour_value, "requests": 1})
         else:
             hour_index = traffics_list.index(next(hour for hour in traffics_list if hour["hour"] == hour_value))
-            traffics_list[hour_index]["traffic"] += 1
-    return traffics_list
+            traffics_list[hour_index]["requests"] += 1
+    return sorted(traffics_list, key=lambda x: x["requests"], reverse=True)
 
 def main():
     # Print Header
@@ -136,22 +136,22 @@ def main():
     # Evaluate and print client IPs and their frequencies
     print("Tope 5 client IPs:")
     IP_frequencies_dict_list = IP_frequencies(all_data_dict_list)
-    for i in range(5):
-        print("   {:<15} - {:,>3 } requests".format(IP_frequencies_dict_list[i]["IP"], IP_frequencies_dict_list[i]["frequency"]))
+    for i in range(len(IP_frequencies_dict_list)):
+        print("   {:<16} - {:>3} requests".format(IP_frequencies_dict_list[i]["ip"], int(IP_frequencies_dict_list[i]["requests"])))
 
     # Evaluate and print Status Codes and their frequencies
     print("Status Code Destribution:")
-    status_frequencies_dict_list = status_code_destribution(all_data_dict_list)
+    status_frequencies_dict_list = status_code_destribution(all_data_dict_list)[1]
     for status in status_frequencies_dict_list:
-        print("   {:<14} - {:,<10} requests".format(status_frequencies_dict_list["status"], status_frequencies_dict_list["frequency"]))
+        print("   {:<16} - {:>5} requests".format(list(status.keys())[0], int(list(status.values())[0])))
 
     # Calculate and print Error Percentage
     error_percent = error_percentage(status_frequencies_dict_list)
-    print(f"Error Percentage: {error_percentage}%")
+    print(f"Error Percentage: {error_percent}")
 
     # Evaluate and print Peak Traffic Hour
-    traffics = hourly_traffics(all_data_dict_list)
-    print(f"Peak traffic hour: {traffics[0]["Hour"]}:00 - {traffics[0]["Hour"]+1 if traffics[0]["Hour"] < 24 else 00}:00 UTC")
+    traffics = sorted(hourly_traffics(all_data_dict_list), key = lambda x: x["requests"])
+    print(f"Peak traffic hour: {traffics[0]}")
 
 if __name__ == "__main__":
     main()
