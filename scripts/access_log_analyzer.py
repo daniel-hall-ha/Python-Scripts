@@ -96,11 +96,28 @@ def status_code_destribution(all_data_dict_list):
     ###
     return status_code_destribution_list, brief_status_list
 
-def error_percentage(status_dict_list):
-    pass
+def error_percentage(brief_status_list):
+    error_count = 0
+    total_status = sum(list(frequency.values())[0] for frequency in brief_status_list)
+    for status in brief_status_list[2:]:
+        error_count += list(status.values())[0]
+    return f"{(error_count/total_status)*100:1}%"
 
 def hourly_traffics(all_data_dict_list):
-    pass
+    traffics_list = []
+    for data in all_data_dict_list:
+        ###
+        extract_hour = re.match(r".*(\d{2}):\d{2}:\d{2}.*", data["timestamp"])
+        extract_hour = extract_hour.group(1)
+        hour_value = f"{extract_hour}:00 - {(int(extract_hour)+1):02}:00 UTC" 
+        ###
+        updated_hour_list = list(hour["hour"] for hour in traffics_list)
+        if not hour_value in updated_hour_list:
+            traffics_list.append({"hour": hour_value, "traffic": 1})
+        else:
+            hour_index = traffics_list.index(next(hour for hour in traffics_list if hour["hour"] == hour_value))
+            traffics_list[hour_index]["traffic"] += 1
+    return traffics_list
 
 def main():
     # Print Header
