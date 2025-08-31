@@ -73,7 +73,28 @@ def IP_frequencies(all_data_dict_list):
     return IP_frequencies_list
 
 def status_code_destribution(all_data_dict_list):
-    pass
+    status_code_destribution_list = []
+    brief_status_list = [{"2xx Success": 0}, {"3xx Redirect": 0}, {"4xx Client Error": 0}, {"5xx Server Error": 0}]
+    ###
+    for data in all_data_dict_list:
+        updated_status_list = list(status["status"] for status in status_code_destribution_list)
+        if not data["status"] in updated_status_list:
+            status_code_destribution_list.append({"status": data["status"], "frequency": 1})
+        else:
+            IP_index = status_code_destribution_list.index(next(status for status in status_code_destribution_list if status["status"] == data["status"]))
+            status_code_destribution_list[IP_index]["frequency"] += 1
+    ###
+    for status in status_code_destribution_list:
+        if str(status["status"]).startswith("2"):
+            brief_status_list[0]["2xx Success"] += status["frequency"]
+        elif str(status["status"]).startswith("3"):
+            brief_status_list[1]["3xx Redirect"] += status["frequency"]
+        elif str(status["status"]).startswith("4"):
+            brief_status_list[2]["4xx Client Error"] += status["frequency"]
+        elif str(status["status"]).startswith("5"):
+            brief_status_list[3]["5xx Server Error"] += status["frequency"]
+    ###
+    return status_code_destribution_list, brief_status_list
 
 def error_percentage(status_dict_list):
     pass

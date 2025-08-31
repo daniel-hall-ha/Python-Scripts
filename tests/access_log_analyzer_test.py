@@ -1,5 +1,5 @@
 import unittest
-from scripts.access_log_analyzer import input_file, extract_data_from_file, total_number_of_requests, IP_frequencies
+from scripts.access_log_analyzer import input_file, extract_data_from_file, total_number_of_requests, IP_frequencies, status_code_destribution
 from unittest.mock import patch
 
 class UnitTests(unittest.TestCase):
@@ -372,11 +372,69 @@ class UnitTests(unittest.TestCase):
         result = IP_frequencies(data_list)
         expected = [{"ip": "127.167.171.1", "requests": 2}, {"ip": "117.74.190.180", "requests": 2}, {"ip": "207.238.22.214", "requests": 1}]
         self.assertEqual(result, expected)
-'''
-    def test_status_code_destribution(self):
-        result = status_code_destribution([{},{}])
-        self.assertEqual(result, "")
 
+    def test_status_code_destribution(self):
+        data_list = [
+            {
+                "ip": "127.167.171.1",
+                "timestamp": "29/Aug/2025:00:37:02",
+                "method": "GET",
+                "path": "/dashboard",
+                "protocol": "HTTP/1.1",
+                "status": 404,
+                "size": 7317,
+                "referer": "-",
+                "user_agent": "curl/7.68.0"
+            },
+            {
+                "ip": "117.74.190.180",
+                "timestamp": "29/Aug/2025:00:37:02",
+                "method": "DELETE",
+                "path": "/products",
+                "protocol": "HTTP/1.1",
+                "status": 500,
+                "size": 2803,
+                "referer": "-",
+                "user_agent": "Wget/1.20.3 (linux-gnu)"
+            },
+            {
+                "ip": "207.238.22.214",
+                "timestamp": "29/Aug/2025:00:37:02",
+                "method": "POST",
+                "path": "/static/js/app.js",
+                "protocol": "HTTP/1.1",
+                "status": 404,
+                "size": 4086,
+                "referer": "-",
+                "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Safari/605.1.15"
+            },
+            {
+                "ip": "117.74.190.180",
+                "timestamp": "29/Aug/2025:00:37:02",
+                "method": "POST",
+                "path": "/dashboard",
+                "protocol": "HTTP/1.1",
+                "status": 503,
+                "size": 2195,
+                "referer": "-",
+                "user_agent": "Wget/1.20.3 (linux-gnu)"
+            },
+            {
+                "ip": "127.167.171.1",
+                "timestamp": "29/Aug/2025:00:37:02",
+                "method": "DELETE",
+                "path": "/dashboard",
+                "protocol": "HTTP/1.1",
+                "status": 502,
+                "size": 2418,
+                "referer": "-",
+                "user_agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64) Firefox/113.0"
+        }]
+        result = status_code_destribution(data_list)
+        expected1 = [{"status": 404, "frequency":2}, {"status": 500, "frequency": 1}, {"status": 503, "frequency": 1}, {"status": 502, "frequency": 1}]
+        expected2 = [{"2xx Success": 0}, {"3xx Redirect": 0}, {"4xx Client Error": 2}, {"5xx Server Error": 3}]
+        self.assertEqual(result, (expected1,expected2))
+'''
     def test_error_percentage(self):
         result = error_percentage([{}])
         self.assertEqual(result, "")
