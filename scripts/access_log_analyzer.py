@@ -4,17 +4,21 @@ import os, sys, re, json
 
 def input_file():
     # Log File Input Control
-    file_type = input("Choose log type.\n1. Apache Access Combine\n2. Apache Access Common\n3. Loggly Events JSON\n4. NGINX Access or Enter q to quit.")
+    file_type = input("Choose log type.\n1. Apache Access Combine\n2. Apache Access Common\n3. Loggly Events JSON\n4. NGINX Access\nEnter q to quit.\n")
+    os.system('clear')
     if file_type in ["Q", "q"]:
         sys.exit(1)
     while file_type not in ["1", "2", "3", "4"]:
         file_type = input("Invalid Choice! Enter again or q to quit:")
+    os.system('clear')
     #Log Path Input Control
     file_path = input("Enter your file path. Enter q to quit: ")
+    os.system('clear')
     if file_path in ["Q", "q"]:
         sys.exit(1)
     while (not os.path.exists(file_path)):
         file_path = input("File not found! Check again and re-enter. Enter q to quit: ")
+    os.system('clear')
     return file_type, file_path
 
 def extract_data_from_file(file_type, file_path):
@@ -120,38 +124,46 @@ def hourly_traffics(all_data_dict_list):
     return sorted(traffics_list, key=lambda x: x["requests"], reverse=True)
 
 def main():
-    # Print Header
-    print("Server Log Analysis Report")
-    print("==============================")
-
+    os.system("clear")
     file_type, file_path = input_file()
 
     # Fetch data from file and save as dictionary
     all_data_dict_list = extract_data_from_file(file_type, file_path)
 
+
+    # Print Header
+    print("Server Log Analysis Report")
+    print("==========================")
+    print("")
+
     # Calculate and print total_requests
     total_requests = total_number_of_requests(all_data_dict_list)
     print(f"Total requests: {total_requests}")
+    print("")
 
     # Evaluate and print client IPs and their frequencies
     print("Tope 5 client IPs:")
     IP_frequencies_dict_list = IP_frequencies(all_data_dict_list)
     for i in range(len(IP_frequencies_dict_list)):
         print("   {:<16} - {:>3} requests".format(IP_frequencies_dict_list[i]["ip"], int(IP_frequencies_dict_list[i]["requests"])))
+    print("")
 
     # Evaluate and print Status Codes and their frequencies
     print("Status Code Destribution:")
     status_frequencies_dict_list = status_code_destribution(all_data_dict_list)[1]
     for status in status_frequencies_dict_list:
         print("   {:<16} - {:>5} requests".format(list(status.keys())[0], int(list(status.values())[0])))
+    print("")
 
     # Calculate and print Error Percentage
     error_percent = error_percentage(status_frequencies_dict_list)
     print(f"Error Percentage: {error_percent}")
+    print("")
 
     # Evaluate and print Peak Traffic Hour
     traffics = sorted(hourly_traffics(all_data_dict_list), key = lambda x: x["requests"])
-    print(f"Peak traffic hour: {traffics[0]}")
+    print(f"Peak traffic hour: {traffics[0]["hour"]}")
+    print("")
 
 if __name__ == "__main__":
     main()
