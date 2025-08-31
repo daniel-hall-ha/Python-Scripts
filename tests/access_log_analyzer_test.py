@@ -437,7 +437,7 @@ class UnitTests(unittest.TestCase):
 
     def test_error_percentage(self):
         result = error_percentage([{"2xx Success": 1}, {"3xx Redirect": 2}, {"4xx Client Error": 2}, {"5xx Server Error": 3}])
-        self.assertEqual(result, "62.5%")
+        self.assertEqual(result, "62.50%")
 
     def test_hourly_traffics(self):
         data_list = [

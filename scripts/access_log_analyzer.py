@@ -101,7 +101,7 @@ def error_percentage(brief_status_list):
     total_status = sum(list(frequency.values())[0] for frequency in brief_status_list)
     for status in brief_status_list[2:]:
         error_count += list(status.values())[0]
-    return f"{(error_count/total_status)*100:2f}%"
+    return f"{(error_count/total_status)*100:.2f}%"
 
 def hourly_traffics(all_data_dict_list):
     traffics_list = []
