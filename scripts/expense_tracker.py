@@ -280,6 +280,28 @@ def check_source_file():
                 )
     """)
 
+def display_records(From, To, table_id):
+    
+    # Extract
+
+    with sqlite3.connect(file_path) as connection:
+        cur = connection.cursor()
+        query = f"""SELECT date, title, description, price, quantity, total_cost, remarks FROM {table_id} WHERE DATE(date) >= DATE(?) AND DATE(date) <= DATE(?)"""
+        cur.execute(query, (From, To))
+
+        expense_list = cur.fetchall()
+    
+        # Display
+
+    table = PrettyTable()
+    table.align = "l"
+    table.field_names = ["Date", "Title", "Description", "Price", "Quantity", "Total Cost", "Remarks"]
+    table.max_width["Description"] = 40
+    table.max_width["Title"] = 25
+    for expense in expense_list:
+        table.add_row(expense)
+    print(table)
+    
 def main():
 
     # Check source database
@@ -367,7 +389,21 @@ def main():
         
         elif onboard == "view":
 
-            pass
+            os.system('clear')
+
+            print("VIEW EXPENSES")
+            print("=============")
+
+            From = input("From YYYY-MM-DD: ")
+            To = input("To YYYY-MM-DD: ")
+
+            display_records(From, To, table_id)
+
+            menu = input("Enter q to quit.")
+            while not menu == "q":
+                menu = input("Enter q to quit.")
+            print("Thank You")
+            sys.exit(0)
 
         else:
 
