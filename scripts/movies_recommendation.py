@@ -2,19 +2,27 @@ import requests
 from prettytable import PrettyTable
 import os
 import re
+from dotenv import load_dotenv
+from IPython.display import clear_output
+
+# Load API Token
+load_dotenv()
+token = os.getenv("TMDB_TOKEN")
+
+# Set API Headers
+def get_header():
+    return {
+        "Authorization": f"Bearer {token}",
+        "accept": "application/json"
+    }
 
 # Get Genres IDs
 
 def get_genres_list():
     # API End Point for Genres
     url = "https://api.themoviedb.org/3/genre/movie/list?language=en"
-    # Required API headers
-    headers = {
-        "Authorization": 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MzExYjliODQ2NTg4Y2ZkOTEyZGVkMGZkMmJiMWM1MCIsIm5iZiI6MTc1ODUwNDY4NS4yMzUwMDAxLCJzdWIiOiI2OGQwYTZlZDUyY2QyZWM4N2M3NGE0NmEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.mXql1EzrBDC4IJFz043qGNEfYbRG4nNepzzs4QbZGgI',
-        "accept": 'application/json'
-    }
     # Call for GET Method
-    responses = requests.get(url, headers=headers)
+    responses = requests.get(url, headers=get_header())
     # Return the list of dictionaries of genres
     return responses.json()["genres"]
 
@@ -34,7 +42,7 @@ def choose_genres(genre_list):
     return [genre_list[int(i)-1] for i in choice_list_str.split(',')]
 
 def check_genre_list_string(choice_list_str, genre_list):
-    # If choice list string format is incorrect
+    # If choice list string format is incorrect (not a sequence of numbers separated by ,)
     if not re.match(r"^\d+(,\d+)*$", choice_list_str):
         return False
     # If choice list string format is correct but the numbers are incorrect
@@ -62,18 +70,13 @@ def get_keywords_list(raw_keywords_list):
     keywords = []
     # API End Point for Keywords
     url = "https://api.themoviedb.org/3/search/keyword"
-    # Required API Headers
-    headers = {
-        "Authorization": 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MzExYjliODQ2NTg4Y2ZkOTEyZGVkMGZkMmJiMWM1MCIsIm5iZiI6MTc1ODUwNDY4NS4yMzUwMDAxLCJzdWIiOiI2OGQwYTZlZDUyY2QyZWM4N2M3NGE0NmEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.mXql1EzrBDC4IJFz043qGNEfYbRG4nNepzzs4QbZGgI',
-        "accept": 'application/json'
-    }
     # Search for each raw_keyword
     for raw_keyword in raw_keywords_list:
         params = {
             "query": raw_keyword
         }
         # Call for GET Method
-        responses = requests.get(url, headers=headers, params=params)
+        responses = requests.get(url, headers=get_header(), params=params)
         # Join the list of dictionaries of related keywords
         keywords += responses.json()["results"]
     # Return the list of related keywords
@@ -88,11 +91,6 @@ def extract_keywords_id(keywords_list):
 def get_top_movies(genres_id_list, keywords_id_list):
     # API End Point for Movies List
     url = "https://api.themoviedb.org/3/discover/movie"
-    # Required Headers for API Call
-    headers = {
-        "accept": "application/json",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MzExYjliODQ2NTg4Y2ZkOTEyZGVkMGZkMmJiMWM1MCIsIm5iZiI6MTc1ODUwNDY4NS4yMzUwMDAxLCJzdWIiOiI2OGQwYTZlZDUyY2QyZWM4N2M3NGE0NmEiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.mXql1EzrBDC4IJFz043qGNEfYbRG4nNepzzs4QbZGgI"
-    }
     # Parameters for Top 20 Movies with Provided Keywords
     params = {
         "with_genres" : "|".join(str(x) for x in genres_id_list),
@@ -102,7 +100,7 @@ def get_top_movies(genres_id_list, keywords_id_list):
         "include_video" : 'false',
         "language" : 'en-US'
     }
-    response = requests.get(url, headers=headers, params=params)
+    response = requests.get(url, headers=get_header(), params=params)
     return response.json()["results"]
 
 def display_final_results(top_movies_list, genres_list, selected_genre_id_list, special_keywords):
@@ -147,7 +145,7 @@ def main():
 
     # Display top five movies with selected keywords
     top_movies = get_top_movies(selected_genres_id_list, selected_keywords_id_list)
-    os.system('clear')
+    clear_output(wait=True)
     display_final_results(top_movies, genres_list, selected_genres_id_list, special_keywords)
 
 if __name__ == "__main__":
