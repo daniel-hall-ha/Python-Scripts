@@ -4,15 +4,22 @@ import os
 import re
 from dotenv import load_dotenv
 from IPython.display import clear_output
+from pathlib import Path
 
 # Load API Token
-load_dotenv()
-token = os.getenv("TMDB_TOKEN")
+
+env_path = Path(__file__).parent/".env"
+load_dotenv(dotenv_path=env_path)
+
+IMDB_TOKEN = os.getenv("TMDB_TOKEN")
+if not IMDB_TOKEN:
+    raise ValueError("TMDB_TOKEN not found. Make sure .env file exists and has TMDB_TOKEN defined.")
 
 # Set API Headers
+
 def get_header():
     return {
-        "Authorization": f"Bearer {token}",
+        "Authorization": f"Bearer {IMDB_TOKEN}",
         "accept": "application/json"
     }
 
@@ -105,6 +112,7 @@ def get_top_movies(genres_id_list, keywords_id_list):
 
 def display_final_results(top_movies_list, genres_list, selected_genre_id_list, special_keywords):
     final_list = []
+    genre_lookup = {genre["id"]:genre["name"] for genre in genres_list}
     for movie in top_movies_list[:5]:
         final_list.append({
             "title": movie["title"], 
@@ -124,7 +132,7 @@ def display_final_results(top_movies_list, genres_list, selected_genre_id_list, 
         table.add_row(["Plot",movie["plot"]], divider=True)
     print("Top Recommended Five Movies")
     print("===========================")
-    print(f"Genre: {", ".join(genre["name"] for genre in genres_list if genre["id"] in selected_genre_id_list)}")
+    print(f"Genre: {", ".join(genre_lookup[i] for i in selected_genre_id_list)}")
     print(f"Keywords: {", ".join(special_keywords)}")
     print(table)
 
