@@ -23,21 +23,30 @@ def get_header():
         "accept": "application/json"
     }
 
+# Calling API, this will return response JSON body
+
+def safe_get(endpoint, **params):
+    try:
+        # Define API endpoint url
+        url = f"https://api.themoviedb.org/3/{endpoint}"
+        # Call API for response
+        responses = requests.get(url, headers=get_header(), params=params)
+        # Return Response if success
+        return responses.json()
+    except requests.exceptions.RequestException as e:
+        # Return {} with error status
+        print("Error fetching API responses: ", responses.status_code)
+        return {}
+
 # Get Genres IDs
 
-def get_genres_list():
-    try:
-        # API End Point for Genres
-        url = "https://api.themoviedb.org/3/genre/movie/list?language=en"
-        # Call for GET Method
-        responses = requests.get(url, headers=get_header())
-        # Return the list of dictionaries of genres
-        return responses.json()["genres"]
-    except:
-        print("Error fetching genres: ", responses.status_code)
-        return []
+def get_genres_list() -> list[dict]:
+    # Fetch API responses
+    genres_list = safe_get("genre/movie/list", language="en")
+    # Return genres list
+    return genres_list["genres"]
 
-def choose_genres(genre_list):
+def choose_genres(genre_list) -> list[dict]:
     # Show user the list of genres with two-page tables
     table = PrettyTable()
     table.field_names = ["No.", "Genre"]
@@ -49,26 +58,26 @@ def choose_genres(genre_list):
     # If genre_list_string is incorrect, prompt re-enter
     while not check_genre_list_string(choice_list_str, genre_list):
         choice_list_str = input(f"Incorrect value! Make sure the only numbers given in the above table are included with no space.\n Genre: ")
-    # Return genre ID list of selected genre
+    # Return genre list of selected genre
     return [genre_list[int(i)-1] for i in choice_list_str.split(',')]
 
-def check_genre_list_string(choice_list_str, genre_list):
+def check_genre_list_string(choice_list_str, genre_list) -> bool:
     # If choice list string format is incorrect (not a sequence of numbers separated by ,)
     if not re.match(r"^\d+(,\d+)*$", choice_list_str):
         return False
     # If choice list string format is correct but the numbers are incorrect
     choice_list = choice_list_str.split(',')
-    if any([int(x)>len(genre_list) or int(x)<0 for x in choice_list]):
+    if any([int(x)>len(genre_list) or int(x)<1 for x in choice_list]):
         return False
     # If none of above condition is false, reutrn True
     return True
 
-def extract_genres_id(selected_genres_list):
+def extract_genres_id(selected_genres_list) -> list[int]:
     return [genre["id"] for genre in selected_genres_list]
 
 # Get Keyword IDs
 
-def enter_special_keywords():
+def enter_special_keywords() -> list[str]:
     # Enter raw keyword
     raw_keywords_str = input("Enter your keywords (separated by comma for multivalues) : ")
     while raw_keywords_str == None:
@@ -76,51 +85,32 @@ def enter_special_keywords():
     raw_keywords_list = raw_keywords_str.split(',')
     return [x.strip() for x in raw_keywords_list]
 
-def get_keywords_list(raw_keywords_list):
+def get_keywords_list(raw_keywords_list) -> list[dict]:
     # Declare Keywords List
     keywords = []
-    try:
-        # API End Point for Keywords
-        url = "https://api.themoviedb.org/3/search/keyword"
-        # Search for each raw_keyword
-        for raw_keyword in raw_keywords_list:
-            params = {
-                "query": raw_keyword
-            }
-            # Call for GET Method
-            responses = requests.get(url, headers=get_header(), params=params)
-            # Join the list of dictionaries of related keywords
-            keywords += responses.json()["results"]
-        # Return the list of related keywords
-        return keywords
-    except:
-        print("Error fetching keywords: ", responses.status_code)
-        return []
+    # Fetch API responses for earch raw_keyword
+    for raw_keyword in raw_keywords_list:
+        keywords_list = safe_get("search/keyword", query=raw_keyword)
+        keywords+=keywords_list.get("results", "N/A")
+    # Return the list of related keywords
+    return keywords
 
-def extract_keywords_id(keywords_list):
+def extract_keywords_id(keywords_list) -> list[int]:
     # Extract only IDs
     return [keyword["id"] for keyword in keywords_list]
 
 # Get Top Movies
 
-def get_top_movies(genres_id_list, keywords_id_list):
-    try:
-        # API End Point for Movies List
-        url = "https://api.themoviedb.org/3/discover/movie"
-        # Parameters for Top 20 Movies with Provided Keywords
-        params = {
-            "with_genres" : "|".join(str(x) for x in genres_id_list),
-            "with_keywords" : "|".join(str(x) for x in keywords_id_list),
-            "sort_by" : 'popularity.desc',
-            "include_adult" : 'false',
-            "include_video" : 'false',
-            "language" : 'en-US'
-        }
-        response = requests.get(url, headers=get_header(), params=params)
-        return response.json()["results"]
-    except:
-        print("Error fetching movies list: ", response.status_code)
-        return []
+def get_top_movies(genres_id_list, keywords_id_list) -> list[dict]:
+    # Fetch API responses
+    response = safe_get("discover/movie", 
+                        with_genres="|".join(str(x) for x in genres_id_list), 
+                        with_keywords="|".join(str(x) for x in keywords_id_list),
+                        sort_by='popularity.desc',
+                        include_adult='false',
+                        include_video='false',
+                        language='en-US')
+    return response["results"]
 
 def display_final_results(top_movies_list, genres_list, selected_genre_id_list, special_keywords):
     final_list = []
@@ -145,8 +135,8 @@ def display_final_results(top_movies_list, genres_list, selected_genre_id_list, 
         table.add_row(["Plot",movie["plot"]], divider=True)
     print("Top Recommended Five Movies")
     print("===========================")
-    print(f"Genre: {", ".join(genre_lookup[i] for i in selected_genre_id_list)}")
-    print(f"Keywords: {", ".join(special_keywords)}")
+    print(f"Genre: {', '.join(genre_lookup[i] for i in selected_genre_id_list)}")
+    print(f"Keywords: {', '.join(special_keywords)}")
     print(table)
 
 def main():
