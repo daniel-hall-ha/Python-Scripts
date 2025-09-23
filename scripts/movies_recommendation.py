@@ -26,12 +26,16 @@ def get_header():
 # Get Genres IDs
 
 def get_genres_list():
-    # API End Point for Genres
-    url = "https://api.themoviedb.org/3/genre/movie/list?language=en"
-    # Call for GET Method
-    responses = requests.get(url, headers=get_header())
-    # Return the list of dictionaries of genres
-    return responses.json()["genres"]
+    try:
+        # API End Point for Genres
+        url = "https://api.themoviedb.org/3/genre/movie/list?language=en"
+        # Call for GET Method
+        responses = requests.get(url, headers=get_header())
+        # Return the list of dictionaries of genres
+        return responses.json()["genres"]
+    except:
+        print("Error fetching genres: ", responses.status_code)
+        return []
 
 def choose_genres(genre_list):
     # Show user the list of genres with two-page tables
@@ -75,19 +79,23 @@ def enter_special_keywords():
 def get_keywords_list(raw_keywords_list):
     # Declare Keywords List
     keywords = []
-    # API End Point for Keywords
-    url = "https://api.themoviedb.org/3/search/keyword"
-    # Search for each raw_keyword
-    for raw_keyword in raw_keywords_list:
-        params = {
-            "query": raw_keyword
-        }
-        # Call for GET Method
-        responses = requests.get(url, headers=get_header(), params=params)
-        # Join the list of dictionaries of related keywords
-        keywords += responses.json()["results"]
-    # Return the list of related keywords
-    return keywords
+    try:
+        # API End Point for Keywords
+        url = "https://api.themoviedb.org/3/search/keyword"
+        # Search for each raw_keyword
+        for raw_keyword in raw_keywords_list:
+            params = {
+                "query": raw_keyword
+            }
+            # Call for GET Method
+            responses = requests.get(url, headers=get_header(), params=params)
+            # Join the list of dictionaries of related keywords
+            keywords += responses.json()["results"]
+        # Return the list of related keywords
+        return keywords
+    except:
+        print("Error fetching keywords: ", responses.status_code)
+        return []
 
 def extract_keywords_id(keywords_list):
     # Extract only IDs
@@ -96,30 +104,35 @@ def extract_keywords_id(keywords_list):
 # Get Top Movies
 
 def get_top_movies(genres_id_list, keywords_id_list):
-    # API End Point for Movies List
-    url = "https://api.themoviedb.org/3/discover/movie"
-    # Parameters for Top 20 Movies with Provided Keywords
-    params = {
-        "with_genres" : "|".join(str(x) for x in genres_id_list),
-        "with_keywords" : "|".join(str(x) for x in keywords_id_list),
-        "sort_by" : 'popularity.desc',
-        "include_adult" : 'false',
-        "include_video" : 'false',
-        "language" : 'en-US'
-    }
-    response = requests.get(url, headers=get_header(), params=params)
-    return response.json()["results"]
+    try:
+        # API End Point for Movies List
+        url = "https://api.themoviedb.org/3/discover/movie"
+        # Parameters for Top 20 Movies with Provided Keywords
+        params = {
+            "with_genres" : "|".join(str(x) for x in genres_id_list),
+            "with_keywords" : "|".join(str(x) for x in keywords_id_list),
+            "sort_by" : 'popularity.desc',
+            "include_adult" : 'false',
+            "include_video" : 'false',
+            "language" : 'en-US'
+        }
+        response = requests.get(url, headers=get_header(), params=params)
+        return response.json()["results"]
+    except:
+        print("Error fetching movies list: ", response.status_code)
+        return []
 
 def display_final_results(top_movies_list, genres_list, selected_genre_id_list, special_keywords):
     final_list = []
     genre_lookup = {genre["id"]:genre["name"] for genre in genres_list}
     for movie in top_movies_list[:5]:
+        genres = ", ".join(genre_lookup.get(genre_id,"N/A") for genre_id in movie.get("genre_ids", "[]"))
         final_list.append({
-            "title": movie["title"], 
-            "genre": ", ".join(genre["name"] for genre in genres_list if genre["id"] in movie["genre_ids"]),
-            "release_date": movie["release_date"],
-            "popularity": movie["popularity"],
-            "plot": movie["overview"]
+            "title": movie.get("title", "N/A"), 
+            "genre": genres,
+            "release_date": movie.get("release_date", "N/A"),
+            "popularity": movie.get("popularity", "N/A"),
+            "plot": movie.get("overview", "N/A")
         })
     # Define Tables
     table = PrettyTable(header=False, align="l", max_width=100)
