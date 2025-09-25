@@ -1,0 +1,54 @@
+Jul 6 14:26:02 computer.name sshd[12350]: Accepted password for alice from 198.51.100.22 port 51234 ssh2
+Jul 6 14:26:45 computer.name kernel: [    0.000000] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+Jul 6 14:27:11 computer.name sudo[6790]: mallory : TTY=pts/2 ; PWD=/home/mallory ; USER=root ; COMMAND=/usr/bin/apt update
+Jul 6 14:27:12 computer.name apt[6801]: Reading package lists... Done
+Jul 6 14:27:13 computer.name apt[6801]: Building dependency tree... Done
+Jul 6 14:27:20 computer.name sshd[12351]: Failed password for invalid user test from 45.77.12.8 port 61314 ssh2
+Jul 6 14:27:31 computer.name sshd[12351]: Received disconnect from 45.77.12.8 port 61314:11: Bye Bye [preauth]
+Jul 6 14:28:02 computer.name CRON[29451]: USER (root)
+Jul 6 14:28:22 computer.name postfix/qmgr[7100]: 9A2C41001: from=<root@computer.name>, size=245, nrcpt=1 (queue active)
+Jul 6 14:28:23 computer.name postfix/smtp[7103]: 9A2C41001: to=<admin@example.com>, relay=mail.example.org[203.0.113.2]:25, delay=0.63, delays=0.12/0.01/0.3/0.2, dsn=2.0.0, status=sent (250 OK)
+Jul 6 14:29:01 computer.name systemd[1]: Stopping Daily apt download activities...
+Jul 6 14:29:07 computer.name dbus-daemon[900]: [session uid=1001 pid=900] Successfully activated service 'org.freedesktop.Notifications'
+Jul 6 14:29:22 computer.name gnome-shell[1120]: Window manager warning: client bug: timer event dropped
+Jul 6 14:30:14 computer.name sshd[12352]: Accepted publickey for eve from 172.16.0.9 port 34567 ssh2: RSA SHA256:AbCdEfGhIjKlMnOpQrStUvWxYz
+Jul 6 14:30:45 computer.name kernel: [    1.234567] usb 1-1.2: new high-speed USB device number 4 using xhci_hcd
+Jul 6 14:31:03 computer.name su[3340]: (to root) alarm on pts/3
+Jul 6 14:31:39 computer.name sudo[6810]: bob : TTY=pts/4 ; PWD=/home/bob ; USER=root ; COMMAND=/usr/bin/systemctl restart nginx
+Jul 6 14:31:40 computer.name systemd[1]: Reloading nginx configuration file.
+Jul 6 14:31:41 computer.name nginx[7122]: nginx: [warn] conflicting server name "example.local" on 0.0.0.0:80, ignored
+Jul 6 14:32:05 computer.name sshd[12353]: Failed password for root from 203.0.113.9 port 62222 ssh2
+Jul 6 14:32:07 computer.name sshd[12353]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=203.0.113.9  user=root
+Jul 6 14:32:20 computer.name rsyslogd-2007: action 'action 17' suspended, next retry is Tue Jul  6 14:33:20
+Jul 6 14:32:48 computer.name systemd-logind[999]: Removed session 101.
+Jul 6 14:33:01 computer.name CRON[29452]: pam_unix(cron:session): session opened for user root by (uid=0)
+Jul 6 14:33:12 computer.name kernel: [    2.345678] EXT4-fs (sda1): mounted filesystem with ordered data mode. Opts: (null)
+Jul 6 14:33:46 computer.name systemd[1]: Started Message of the Day.
+Jul 6 14:34:10 computer.name sshd[12354]: Connection closed by 10.10.10.10 [preauth]
+Jul 6 14:34:25 computer.name polkitd[1020]: Unregistered Authentication Agent for unix-session:2 (system bus name :1.42, object path /org/freedesktop/PolicyKit1/AuthenticationAgent, locale en_US.UTF-8)
+Jul 6 14:34:50 computer.name sudo[6820]: charlie : TTY=pts/5 ; PWD=/home/charlie ; USER=root ; COMMAND=/usr/bin/journalctl -u sshd
+Jul 6 14:35:15 computer.name dbus-daemon[900]: [system] Activating service name='org.freedesktop.hostname1' (using servicehelper)
+Jul 6 14:35:20 computer.name NetworkManager[1200]: <info>  [1625583320.1234] device (wlan0): supplicant started
+Jul 6 14:35:30 computer.name sshd[12355]: Accepted password for peggy from 192.0.2.45 port 52223 ssh2
+Jul 6 14:36:02 computer.name kernel: [    3.456789] audit: type=1101 audit(1625583362.000:27): pid=6825 uid=0 auid=4294967295 ses=4294967295 subj=unconfined msg='op=ptrace code=0'
+Jul 6 14:36:17 computer.name CRON[29453]: USER (alice)
+Jul 6 14:36:42 computer.name sshd[12356]: Failed password for invalid user admin from 198.51.100.99 port 64321 ssh2
+Jul 6 14:37:01 computer.name postfix/trivial-rewrite[7110]: warning: connect to private/dovecot-lmtp failed: No such file or directory
+Jul 6 14:37:22 computer.name systemd[1]: Started Session 103 of user david.
+Jul 6 14:37:45 computer.name login[5680]: pam_unix(login:session): session opened for user oscar by LOGIN(uid=0)
+Jul 6 14:38:10 computer.name sudo[6830]: eve : TTY=pts/6 ; PWD=/home/eve ; USER=root ; COMMAND=/usr/bin/docker ps
+Jul 6 14:38:30 computer.name docker[9000]: WARNING: The Docker daemon appears to be running but the image does not exist locally.
+Jul 6 14:39:01 computer.name sshd[12357]: Accepted publickey for trent from 10.0.0.42 port 4445 ssh2: RSA SHA256:ZyXwVuTsRqPoNmLkJiHgFeDcBa
+Jul 6 14:39:12 computer.name kernel: [    4.567890] device eth0 entered promiscuous mode
+Jul 6 14:39:33 computer.name sudo[6840]: mallory : TTY=pts/7 ; PWD=/home/mallory ; USER=root ; COMMAND=/usr/bin/ufw status
+Jul 6 14:39:40 computer.name ufw[7700]: Status: active
+Jul 6 14:40:11 computer.name sshd[12358]: Failed password for victor from 203.0.113.15 port 6001 ssh2
+Jul 6 14:40:22 computer.name sshd[12359]: Accepted password for victor from 203.0.113.15 port 6001 ssh2
+Jul 6 14:40:40 computer.name systemd[1]: Stopping User Manager for UID 1002...
+Jul 6 14:40:45 computer.name kernel: [    5.678901] CPU0: Core temperature above threshold, cpu clock throttled
+Jul 6 14:41:05 computer.name login[5690]: pam_unix(login:session): session closed for user david
+Jul 6 14:41:22 computer.name rsnapshot[7800]: snapshot completed: hourly.0
+Jul 6 14:41:39 computer.name CRON[29454]: USER (naughty_user)
+Jul 6 14:42:02 computer.name sshd[12360]: pam_unix(sshd:session): session closed for user alice
+Jul 6 14:42:35 computer.name apport[8050]: crash report written to /var/crash/_usr_bin_python3.9.1000.crash
+Jul 6 14:43:01 computer.name systemd[1]: Reached target Timers.

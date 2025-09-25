@@ -6,8 +6,9 @@ from datetime import datetime
 from prettytable import PrettyTable
 import sqlite3, getpass
 from decimal import Decimal, ROUND_HALF_UP
+from pathlib import Path
 
-file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "src", "expense_tracker", "database.db")
+file_path = os.path.join(Path(__file__).parents[2], "data", "expense_tracker", "database.db")
 
 def user_registration():
 
@@ -85,7 +86,7 @@ def create_personal_expense_table(table_id):
     connection = sqlite3.connect(file_path)
     cur = connection.cursor()
     cur.execute(f"""
-    CREATE TABLE IF NOT EXISTS {table_id} (
+    CREATE TABLE IF NOT EXISTS "{table_id}" (
         id TEXT PRIMARY KEY NOT NULL,
         date TEXT NOT NULL,
         title TEXT NOT NULL,

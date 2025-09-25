@@ -7,9 +7,7 @@ from IPython.display import clear_output
 from pathlib import Path
 
 # Load API Token
-
-env_path = Path(__file__).parent/".env"
-load_dotenv(dotenv_path=env_path)
+load_dotenv()
 
 IMDB_TOKEN = os.getenv("TMDB_TOKEN")
 if not IMDB_TOKEN:
